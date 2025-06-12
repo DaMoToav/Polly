@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polly - Social Polling Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button id="themeToggle" class="theme-toggle" title="Toggle Theme" aria-label="Toggle Color Theme">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="container" id="mainGridContainer">
+        <header>
+            <div class="header-left">
+                 <a href="#" class="logo-link">
+                     <i class="fas fa-parrot logo-icon"></i>
+                     <span class="logo-text">Polly</span>
+                 </a>
+            </div>
+            <div class="header-buttons">
+                <button id="newPollButton" class="header-btn primary"><i class="fas fa-plus-circle"></i> New Poll</button>
+                <button id="answerPollsButton" class="header-btn secondary"><i class="fas fa-vote-yea"></i> Answer Polls</button>
+            </div>
+        </header>
+
+        <nav class="secondary-header">
+             <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search Polly..." aria-label="Search Polly">
+                <button type="button" id="searchClearButton" class="search-clear-btn" aria-label="Clear search query" title="Clear search"><i class="fas fa-times"></i></button>
+                <button id="searchButton" aria-label="Search"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="nav-buttons-container">
+                <button id="feedButton" class="nav-btn active-nav"><i class="fas fa-home"></i> <span>Feed</span></button>
+                <button id="trendingButton" class="nav-btn"><i class="fas fa-fire"></i> <span>Trending</span></button>
+                <button id="livePollsPageButton" class="nav-btn"><i class="fas fa-bolt"></i> <span>Live</span></button>
+                <button id="analyticsButton" class="nav-btn"><i class="fas fa-chart-line"></i> <span>Analytics</span></button>
+                <button id="messagesPageButton" class="nav-btn"><i class="fas fa-paper-plane"></i> <span>Messages</span></button>
+            </div>
+        </nav>
+
+        <aside class="groups sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-users"></i> Groups</h2>
+                <button id="createGroupBtn" class="create-btn" title="Create New Group" aria-label="Create New Group"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="group-list" id="groupList">
+                <!-- Groups will be loaded here -->
+            </div>
+            <div class="trending-tags">
+                <h2><i class="fas fa-hashtag"></i> Trending Tags</h2>
+                <div class="tags-container" id="tagsContainer">
+                    {/* Tags will be loaded dynamically by JS */}
+                </div>
+            </div>
+        </aside>
+
+        <main class="feed-content">
+            <div class="feed-header">
+                <h2 id="feedTitle">Your Feed</h2>
+                <div class="sort-options">
+                    <label for="feedSortSelect">Sort by:</label>
+                    <select id="feedSortSelect" aria-label="Sort feed">
+                        <option value="recent">Most Recent</option>
+                        <option value="popular">Most Votes</option>
+                        <option value="trending">Trending</option>
+                        <option value="live">Live First</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="polls-container" id="mainPollsContainer">
+                {/* Polls, Analytics, or Messages Content will be loaded here */}
+            </div>
+        </main>
+
+        <aside class="profile-sidebar sidebar">
+            <div class="profile-header">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic" id="userProfilePic">
+                <h2 id="userProfileName">JohnDoe</h2>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="userCreditsValue">1,250</span>
+                        <span class="stat-label">Credits</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="userFollowersValue">428</span>
+                        <span class="stat-label">Followers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="userFollowingValue">156</span>
+                        <span class="stat-label">Following</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="active-polls-section">
+                <h3><i class="fas fa-poll"></i> Your Active Polls</h3>
+                <div id="userActivePollsList">
+                   <!-- User's active polls loaded here -->
+                </div>
+            </div>
+
+            <div class="suggested-users">
+                <h3><i class="fas fa-user-plus"></i> Suggested Users</h3>
+                 <div id="suggestedUsersList">
+                   <!-- Suggested users loaded here -->
+                 </div>
+            </div>
+        </aside>
+
+        {/* New Poll Modal */}
+        <div id="newPollModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="newPollModalTitle">
+            <div class="modal-content">
+                <span class="close-modal" id="closePollModalBtn" tabindex="0" role="button" aria-label="Close new poll modal">&times;</span>
+                <h2 id="newPollModalTitle">Create New Poll</h2>
+                <form id="pollForm">
+                    <div class="form-group">
+                        <label for="pollQuestion">Question</label>
+                        <input type="text" id="pollQuestion" placeholder="Enter your poll question" required>
+                    </div>
+
+                    <div class="form-group options-group">
+                        <label>Options (Min 2 required)</label>
+                        <div class="option-input-row">
+                             <label for="pollOption1" class="sr-only">Option 1</label>
+                             <input type="text" id="pollOption1" placeholder="Option 1 (Required)" required>
+                        </div>
+                        <div class="option-input-row">
+                             <label for="pollOption2" class="sr-only">Option 2</label>
+                             <input type="text" id="pollOption2" placeholder="Option 2 (Required)" required>
+                        </div>
+                         <div class="option-input-row">
+                             <label for="pollOption3" class="sr-only">Option 3</label>
+                             <input type="text" id="pollOption3" placeholder="Option 3">
+                        </div>
+                         <div class="option-input-row">
+                             <label for="pollOption4" class="sr-only">Option 4</label>
+                             <input type="text" id="pollOption4" placeholder="Option 4">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target Audience (Optional)</label>
+                        <div class="filter-options">
+                            <div>
+                                <label for="targetGender">Gender</label>
+                                <select id="targetGender">
+                                    <option value="any">Any</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="targetAge">Age Range</label>
+                                <select id="targetAge">
+                                    <option value="any">Any</option>
+                                    <option value="18-25">18-25</option>
+                                    <option value="26-35">26-35</option>
+                                    <option value="36-45">36-45</option>
+                                    <option value="46+">46+</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pollCredits">Credits to Spend (Boost Reach)</label>
+                        <input type="range" id="pollCredits" min="0" max="1000" step="50" value="100">
+                        <span id="creditsValue">100 credits (approx. 50 people)</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="pollTags">Tags (Optional, separate with commas, no #)</label>
+                        <input type="text" id="pollTags" placeholder="tech, design, business">
+                    </div>
+                    <div class="form-group">
+                         <label for="pollDuration">Duration</label>
+                         <select id="pollDuration">
+                              <option value="1">1 Day</option>
+                              <option value="3">3 Days</option>
+                              <option value="7" selected>7 Days</option>
+                              <option value="live">Live (Manual Stop)</option>
+                         </select>
+                    </div>
+                    <button type="submit" class="submit-poll-btn">Create Poll</button>
+                </form>
+            </div>
+        </div>
+
+        {/* Create Group Modal */}
+        <div id="createGroupModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="createGroupModalTitle">
+            <div class="modal-content">
+                <span class="close-modal" id="closeGroupModalBtn" tabindex="0" role="button" aria-label="Close create group modal">&times;</span>
+                <h2 id="createGroupModalTitle">Create New Group</h2>
+                <form id="groupForm">
+                    <div class="form-group">
+                        <label for="groupName">Group Name</label>
+                        <input type="text" id="groupName" placeholder="Enter group name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="groupDescription">Group Description</label>
+                        <textarea id="groupDescription" rows="3" placeholder="What is this group about?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="groupIconSelect">Group Icon (Optional)</label>
+                        <select id="groupIconSelect">
+                            <option value="">No Icon</option>
+                            <option value="fas fa-users">Default Users</option>
+                            <option value="fas fa-comments">Discussions</option>
+                            <option value="fas fa-gamepad">Gaming</option>
+                            <option value="fas fa-music">Music</option>
+                            <option value="fas fa-book-open">Books</option>
+                            <option value="fas fa-briefcase">Work/Business</option>
+                            <option value="fas fa-lightbulb">Ideas</option>
+                            <option value="fas fa-paint-brush">Art/Design</option>
+                            <option value="fas fa-code">Coding/Tech</option>
+                            <option value="fas fa-utensils">Food</option>
+                            <option value="fas fa-plane">Travel</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="groupInvites">Invite Friends (Optional, comma-separated usernames)</label>
+                        <input type="text" id="groupInvites" placeholder="TechGuru, DesignFan, JaneSmith">
+                    </div>
+                    <button type="submit" class="submit-group-btn">Create Group & Send Invites</button>
+                </form>
+            </div>
+        </div>
+
+    </div> <!-- End .container -->
+
+    {/* Credit Notification Area */}
+    <div id="creditNotification" class="credit-notification" aria-live="polite">
+        +10 Credits Earned!
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
